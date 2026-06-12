@@ -30,6 +30,7 @@ export default function AbastecimentoScreen() {
   const [outrosDescricao, setOutrosDescricao] = useState('');
   const [litros, setLitros] = useState('');
   const [horimetro, setHorimetro] = useState('');
+  const [unidadeHorimetro, setUnidadeHorimetro] = useState<'horas' | 'km'>('horas');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => { loadData(); }, []);
@@ -77,6 +78,7 @@ export default function AbastecimentoScreen() {
         propriedade_id: selectedProp.id,
         litros: Number(litros),
         horimetro_momento: horimetro ? Number(horimetro) : undefined,
+        unidade_horimetro: unidadeHorimetro,
         outros_descricao: isOutros ? outrosDescricao.trim() : undefined,
       });
       Alert.alert('Sucesso', 'Abastecimento registrado!', [
@@ -205,18 +207,36 @@ export default function AbastecimentoScreen() {
 
       {!isOutros && (
         <>
-          <Text style={styles.label}>Horimetro Atual (opcional)</Text>
+          <Text style={styles.label}>Horimetro / KM (opcional)</Text>
+          <View style={styles.unidadeRow}>
+            <TouchableOpacity
+              style={[styles.unidadeBtn, unidadeHorimetro === 'horas' && styles.unidadeBtnSelected]}
+              onPress={() => setUnidadeHorimetro('horas')}
+              activeOpacity={0.7}
+            >
+              <MaterialCommunityIcons name="clock-outline" size={18} color={unidadeHorimetro === 'horas' ? Colors.textOnPrimary : Colors.primary} />
+              <Text style={[styles.unidadeText, unidadeHorimetro === 'horas' && styles.unidadeTextSelected]}>Horas</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.unidadeBtn, unidadeHorimetro === 'km' && styles.unidadeBtnSelected]}
+              onPress={() => setUnidadeHorimetro('km')}
+              activeOpacity={0.7}
+            >
+              <MaterialCommunityIcons name="speedometer" size={18} color={unidadeHorimetro === 'km' ? Colors.textOnPrimary : Colors.primary} />
+              <Text style={[styles.unidadeText, unidadeHorimetro === 'km' && styles.unidadeTextSelected]}>KM</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.inputRow}>
-            <MaterialCommunityIcons name="clock-outline" size={24} color={Colors.primary} />
+            <MaterialCommunityIcons name={unidadeHorimetro === 'horas' ? "clock-outline" : "speedometer"} size={24} color={Colors.primary} />
             <TextInput
               style={styles.inputField}
-              placeholder={selectedMaquina?.horimetro_atual ? `Atual: ${selectedMaquina.horimetro_atual}h` : 'Ex: 1500'}
+              placeholder={selectedMaquina?.horimetro_atual ? `Atual: ${selectedMaquina.horimetro_atual}${unidadeHorimetro === 'horas' ? 'h' : 'km'}` : unidadeHorimetro === 'horas' ? 'Ex: 1500' : 'Ex: 85000'}
               placeholderTextColor={Colors.disabled}
               value={horimetro}
               onChangeText={setHorimetro}
               keyboardType="numeric"
             />
-            <Text style={styles.unit}>horas</Text>
+            <Text style={styles.unit}>{unidadeHorimetro === 'horas' ? 'horas' : 'km'}</Text>
           </View>
         </>
       )}
@@ -280,6 +300,18 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: Fonts.sizeBase, color: Colors.disabled, textAlign: 'center', marginTop: Spacing.sm,
   },
+  unidadeRow: {
+    flexDirection: 'row', gap: Spacing.sm, marginBottom: Spacing.sm,
+  },
+  unidadeBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: Spacing.xs,
+    paddingVertical: Spacing.sm, paddingHorizontal: Spacing.md,
+    borderRadius: BorderRadius.md, borderWidth: 2, borderColor: Colors.primary,
+    backgroundColor: Colors.surface,
+  },
+  unidadeBtnSelected: { backgroundColor: Colors.primary, borderColor: Colors.primary },
+  unidadeText: { fontSize: Fonts.sizeBase, fontWeight: Fonts.weightMedium, color: Colors.primary },
+  unidadeTextSelected: { color: Colors.textOnPrimary },
   inputRow: {
     flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surface,
     borderRadius: BorderRadius.md, borderWidth: 2, borderColor: Colors.border,

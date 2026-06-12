@@ -285,7 +285,7 @@ export function getMaquinaStatus(maquina: Maquina): 'em_dia' | 'proxima' | 'atra
 
 export async function createAbastecimento(data: {
   maquina_id: number; colaborador_id: number; propriedade_id: number; litros: number;
-  horimetro_momento?: number; outros_descricao?: string;
+  horimetro_momento?: number; unidade_horimetro?: 'horas' | 'km'; outros_descricao?: string;
 }): Promise<number> {
   const dataHora = new Date().toISOString();
   const id = await getNextId('abastecimentos');
@@ -293,6 +293,7 @@ export async function createAbastecimento(data: {
     id, maquina_id: data.maquina_id, colaborador_id: data.colaborador_id,
     propriedade_id: data.propriedade_id,
     litros: data.litros, horimetro_momento: data.horimetro_momento ?? null,
+    unidade_horimetro: data.unidade_horimetro ?? 'horas',
     outros_descricao: data.outros_descricao ?? null,
     foto_url: null, data_hora: dataHora, sincronizado: 1,
   });

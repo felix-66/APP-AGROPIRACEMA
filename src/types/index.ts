@@ -37,6 +37,7 @@ export interface Abastecimento {
   propriedade_id: number;
   litros: number;
   horimetro_momento: number | null;
+  unidade_horimetro: 'horas' | 'km';
   outros_descricao: string | null;
   foto_url: string | null;
   data_hora: string;

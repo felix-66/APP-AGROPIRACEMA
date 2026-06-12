@@ -169,7 +169,7 @@ export default function RelatoriosScreen() {
     ).join('');
 
     const abRows = abFiltered.slice(0, 100).map(a =>
-      `<tr><td>${formatDateTime(a.data_hora)}</td><td>${a.maquina_nome || '-'}</td><td>${a.colaborador_nome || '-'}</td><td>${a.propriedade_nome || '-'}</td><td>${a.litros}L</td><td>${a.horimetro_momento ?? '-'}</td></tr>`
+      `<tr><td>${formatDateTime(a.data_hora)}</td><td>${a.maquina_nome || '-'}</td><td>${a.colaborador_nome || '-'}</td><td>${a.propriedade_nome || '-'}</td><td>${a.litros}L</td><td>${a.horimetro_momento != null ? a.horimetro_momento + ((a as any).unidade_horimetro === 'km' ? 'km' : 'h') : '-'}</td></tr>`
     ).join('');
 
     const revRows = revFiltered.slice(0, 100).map(r =>
@@ -574,7 +574,7 @@ export default function RelatoriosScreen() {
               <Text style={styles.itemDetail}>Operador: {a.colaborador_nome || '-'}</Text>
               {a.propriedade_nome && <Text style={styles.itemDetail}>Propriedade: {a.propriedade_nome}</Text>}
               {a.horimetro_momento != null && (
-                <Text style={styles.itemDetail}>Horimetro: {a.horimetro_momento}h</Text>
+                <Text style={styles.itemDetail}>Horimetro: {a.horimetro_momento}{(a as any).unidade_horimetro === 'km' ? 'km' : 'h'}</Text>
               )}
             </View>
           </View>

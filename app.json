@@ -29,6 +29,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "experiments": {
+      "baseUrl": "/APP-AGROPIRACEMA"
+    },
     "plugins": [
       "expo-router",
       "expo-secure-store",
